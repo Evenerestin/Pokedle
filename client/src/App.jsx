@@ -79,7 +79,7 @@ const App = () => {
         </Selection>
 
         <EffectComposer>
-          <Bloom intensity={0.1} />
+          <Bloom intensity={0.2} />
         </EffectComposer>
       </Canvas>
     </div>

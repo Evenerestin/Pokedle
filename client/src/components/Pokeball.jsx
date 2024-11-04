@@ -4,15 +4,18 @@
 import { useGSAP } from "@gsap/react";
 import { useGLTF } from "@react-three/drei";
 import gsap from "gsap";
+import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import * as THREE from "three";
-import idleAnimation from "../animations/Idle.js";
+import idleAnimation from "../assets/Idle.js";
+// import throwAnimation from "../animations/Throw.js";
 
 gsap.registerPlugin(useGSAP);
 
-const Pokeball = () => {
+const Pokeball = ({ onAnimationComplete }) => {
   const [isOpen, setIsOpen] = useState(false);
 
+  const idleTimelineRef = useRef();
   const topHalfRef = useRef();
   const bottomHalfRef = useRef();
   const lightRef = useRef();
@@ -25,13 +28,9 @@ const Pokeball = () => {
   const textureLoader = new THREE.TextureLoader();
   const texture = textureLoader.load("innerBackground.jpg");
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.center.set(0.5, 0.5);
 
   const handleButtonClick = () => {
-    // gsap.to(buttonRef.current.position, {
-    //   z: 2.65,
-    //   duration: 0.4,
-    //   ease: "expo.in",
-    // });
     setIsOpen(true);
   };
 
@@ -40,15 +39,20 @@ const Pokeball = () => {
       defaults: { duration: 2, ease: "power2.out" },
     });
 
-    if (isOpen) {
-      const textureTimeline = gsap.timeline({ repeat: -1 });
-      textureTimeline.to(texture.offset, {
-        y: "+=1", // Adjust this to set the scroll speed
-        duration: 5, // Set duration for one full scroll
-        ease: "linear",
-      });
+    // light pulse
+    gsap.to(lightRef.current.material, {
+      emissiveIntensity: 50,
+      duration: 1.5,
+      repeat: -1,
+      yoyoEase: true,
+      ease: "power2.inOut",
+      delay: "1",
+    });
 
-      timeline.add(textureTimeline, "<");
+    if (isOpen) {
+      if (idleTimelineRef.current) {
+        idleTimelineRef.current.kill();
+      }
 
       gsap.to(buttonRef.current.position, {
         z: 2.65,
@@ -79,12 +83,6 @@ const Pokeball = () => {
         z: "-=0.3",
         duration: 1.5,
         ease: "bounce.out",
-      });
-      gsap.from(innerSphereRef.current.scale, {
-        x: 0.01,
-        y: 0.01,
-        z: 0.01,
-        duration: 2,
       });
       gsap.to(
         topHalfRef.current.position,
@@ -120,6 +118,37 @@ const Pokeball = () => {
         },
         "<"
       );
+      gsap.to(
+        innerSphereRef.current.scale,
+        {
+          x: 5,
+          y: 5,
+          z: 5,
+          duration: 3,
+          ease: "expo.in",
+        },
+        "<"
+      );
+      gsap.to(topHalfRef.current.scale, {
+        x: 0,
+        y: 0,
+        z: 0,
+        duration: 1,
+        delay: 2,
+      });
+      gsap.to(bottomHalfRef.current.scale, {
+        x: 0,
+        y: 0,
+        z: 0,
+        duration: 1,
+        delay: 2,
+      });
+      gsap.to(innerSphereRef.current.position, {
+        z: 7,
+        duration: 10,
+        delay: 2,
+        onComplete: onAnimationComplete,
+      });
       return;
     }
 
@@ -147,36 +176,18 @@ const Pokeball = () => {
         { x: Math.PI / 18, ease: "back.out" },
         "<+=1"
       );
-    // timeline
-    //   .to(pokeballRef.current.position, { z: 0, duration: 2.5 })
-    //   .to(pokeballRef.current.scale, { x: 2, y: 2, z: 2 }, "<")
-    //   .to(pokeballRef.current.position, { y: 0, ease: "bounce.out" }, "<+=0.5")
-    //   .to(
-    //     pokeballRef.current.rotation,
-    //     { x: -Math.PI / 18, y: 0, z: -Math.PI / 12, ease: "ease" },
-    //     "<"
-    //   )
-    //   .to(
-    //     pokeballRef.current.rotation,
-    //     { x: Math.PI / 18, ease: "back.out" },
-    //     "<+=1"
-    //   );
 
-    // timeline.add(idleAnimation(pokeballRef.current));
-    const idleTimeline = gsap.timeline({ repeat: -1 });
-    idleTimeline.add(idleAnimation(pokeballRef.current));
-    timeline.add(idleTimeline);
+    // const throwTimeline = gsap.timeline();
+    // throwTimeline.add(throwAnimation(pokeballRef.current));
+    // timeline.add(throwTimeline);
+    // const idleTimeline = gsap.timeline({ repeat: -1 });
+    // idleTimeline.add(idleAnimation(pokeballRef.current));
+    // timeline.add(idleTimeline);
 
-    // light pulse
-    gsap.to(lightRef.current.material, {
-      emissiveIntensity: 10,
-      duration: 1.5,
-      repeat: -1,
-      yoyoEase: true,
-      ease: "power2.inOut",
-      delay: "3",
-    });
-  }, [pokeballRef.current, isOpen]);
+    idleTimelineRef.current = gsap.timeline({ repeat: -1 });
+    idleTimelineRef.current.add(idleAnimation(pokeballRef.current));
+    timeline.add(idleTimelineRef.current);
+  }, [pokeballRef.current, isOpen, onAnimationComplete]);
 
   return (
     <group
@@ -187,6 +198,8 @@ const Pokeball = () => {
       position={[0, 0, 0]}
       rotation={[Math.PI / 18, 0, -Math.PI / 12]}
       scale={2}
+      castShadow
+      receiveShadow
     >
       <group ref={topHalfRef}>
         <mesh
@@ -273,12 +286,41 @@ const Pokeball = () => {
           scale={0.918}
         />
       </group>
-      <mesh ref={innerSphereRef} position={[0, 0, 0]}>
+      {/* <group ref={innerSphereRef} position={[0, 0, 0]}>
+        <mesh>
+          <sphereGeometry args={[0.2, 32, 32]} />
+          <meshStandardMaterial
+            emissive={new THREE.Color("yellow")}
+            emissiveIntensity={5}
+          />
+        </mesh>
+        <mesh>
+          <sphereGeometry args={[0.85, 32, 32]} />
+          <meshStandardMaterial
+            map={texture}
+            transparent
+            opacity={0.8}
+            blending={THREE.AdditiveBlending}
+          />
+        </mesh>
+      </group> */}
+      <mesh ref={innerSphereRef} scale={[0, 0, 0]} position={[0, 0, 0]}>
         <sphereGeometry args={[0.85, 32, 32]} />
-        <meshStandardMaterial map={texture} />
+        <meshStandardMaterial
+          emissive={new THREE.Color("yellow")}
+          emissiveIntensity={5}
+          side={THREE.DoubleSide}
+        />
+        {/* <sphereGeometry args={[0.75, 32, 32]} /> */}
+        {/* <meshStandardMaterial map={texture} transparent opacity={0.9} /> */}
+        {/* <meshStandardMaterial map={texture} /> */}
       </mesh>
     </group>
   );
+};
+
+Pokeball.propTypes = {
+  onAnimationComplete: PropTypes.func.isRequired,
 };
 
 export default Pokeball;

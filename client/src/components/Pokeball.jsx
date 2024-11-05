@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import * as THREE from "three";
 import idleAnimation from "../assets/Idle.js";
+import TextCount from "../assets/TextCount.js";
 // import throwAnimation from "../animations/Throw.js";
 
 gsap.registerPlugin(useGSAP);
@@ -145,7 +146,13 @@ const Pokeball = ({ onAnimationComplete }) => {
       });
       gsap.to(innerSphereRef.current.position, {
         z: 7,
-        duration: 10,
+        duration: 2,
+        delay: 2,
+        // onComplete: onAnimationComplete,
+      });
+      gsap.to(innerSphereRef.current.material, {
+        opacity: 0,
+        duration: 2,
         delay: 2,
         onComplete: onAnimationComplete,
       });
@@ -310,6 +317,7 @@ const Pokeball = ({ onAnimationComplete }) => {
           emissive={new THREE.Color("yellow")}
           emissiveIntensity={5}
           side={THREE.DoubleSide}
+          opacity={1}
         />
         {/* <sphereGeometry args={[0.75, 32, 32]} /> */}
         {/* <meshStandardMaterial map={texture} transparent opacity={0.9} /> */}

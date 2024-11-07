@@ -3,15 +3,19 @@
 // import { Select } from '@react-three/postprocessing'
 import { useGSAP } from "@gsap/react";
 import { useGLTF } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import * as THREE from "three";
-import idleAnimation from "../assets/Idle.js";
-import TextCount from "../assets/TextCount.js";
+import { idleTween } from "../assets/idleTween.js";
+// import idleAnimation from "../assets/Idle.js";
+// import TextCount from "./TextCount.jsx";
 // import throwAnimation from "../animations/Throw.js";
+import { lightTween } from "../assets/lightTween.js";
+import { throwTween } from "../assets/throwTween.js";
 
-gsap.registerPlugin(useGSAP);
+// gsap.registerPlugin(useGSAP);
 
 const Pokeball = ({ onAnimationComplete }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -19,10 +23,13 @@ const Pokeball = ({ onAnimationComplete }) => {
   const idleTimelineRef = useRef();
   const topHalfRef = useRef();
   const bottomHalfRef = useRef();
-  const lightRef = useRef();
+  // const lightRef = useRef();
   const buttonRef = useRef();
   const pokeballRef = useRef();
   const innerSphereRef = useRef();
+
+  const { scene } = useThree();
+  const q = (name) => scene.getObjectByName(name);
 
   const { nodes, materials } = useGLTF("/pokeball4.glb");
 
@@ -36,19 +43,23 @@ const Pokeball = ({ onAnimationComplete }) => {
   };
 
   useGSAP(() => {
+    // const q = gsap.utils.selector(pokeballRef);
+
     const timeline = gsap.timeline({
       defaults: { duration: 2, ease: "power2.out" },
     });
 
     // light pulse
-    gsap.to(lightRef.current.material, {
-      emissiveIntensity: 50,
-      duration: 1.5,
-      repeat: -1,
-      yoyoEase: true,
-      ease: "power2.inOut",
-      delay: "1",
-    });
+    // gsap.to(lightRef.current.material, {
+    //   emissiveIntensity: 50,
+    //   duration: 1.5,
+    //   repeat: -1,
+    //   yoyoEase: true,
+    //   ease: "power2.inOut",
+    //   delay: "1",
+    // });
+    // timeline.add(lightTween(lightRef.current));
+    timeline.add(lightTween(q("lightHoop")));
 
     if (isOpen) {
       if (idleTimelineRef.current) {
@@ -159,41 +170,8 @@ const Pokeball = ({ onAnimationComplete }) => {
       return;
     }
 
-    // pokeball throw
-    timeline
-      .from(pokeballRef.current.position, { z: -10, duration: 2.5 })
-      .from(pokeballRef.current.scale, { x: 0, y: 0, z: 0 }, "<")
-      .from(
-        pokeballRef.current.position,
-        { y: 4, ease: "bounce.out" },
-        "<+=0.5"
-      )
-      .from(
-        pokeballRef.current.rotation,
-        {
-          x: -Math.PI / 2,
-          y: -Math.PI / 5,
-          z: -Math.PI / 12,
-          ease: "sine.out",
-        },
-        "<"
-      )
-      .to(
-        pokeballRef.current.rotation,
-        { x: Math.PI / 18, ease: "back.out" },
-        "<+=1"
-      );
-
-    // const throwTimeline = gsap.timeline();
-    // throwTimeline.add(throwAnimation(pokeballRef.current));
-    // timeline.add(throwTimeline);
-    // const idleTimeline = gsap.timeline({ repeat: -1 });
-    // idleTimeline.add(idleAnimation(pokeballRef.current));
-    // timeline.add(idleTimeline);
-
-    idleTimelineRef.current = gsap.timeline({ repeat: -1 });
-    idleTimelineRef.current.add(idleAnimation(pokeballRef.current));
-    timeline.add(idleTimelineRef.current);
+    timeline.add(throwTween(pokeballRef.current));
+    timeline.add(idleTween(pokeballRef.current).repeat(-1));
   }, [pokeballRef.current, isOpen, onAnimationComplete]);
 
   return (
@@ -227,7 +205,9 @@ const Pokeball = ({ onAnimationComplete }) => {
             scale={0.32}
           />
           <mesh
-            ref={lightRef}
+            name="lightHoop"
+            // id="lightHoop"
+            // ref={lightRef}
             castShadow
             receiveShadow
             geometry={nodes.Cylinder002.geometry}

@@ -6,7 +6,7 @@ import thirdText from "/guess.png";
 import firstText from "/ready.png";
 import secondText from "/set.png";
 
-const TextCount = ({ onComplete }) => {
+const Countdown = ({ onComplete }) => {
   const firstTextRef = useRef();
   const secondTextRef = useRef();
   const thirdTextRef = useRef();
@@ -57,7 +57,7 @@ const TextCount = ({ onComplete }) => {
   }, [onComplete]);
 
   return (
-    <div>
+    <div id="countdownOverlay">
       <img ref={firstTextRef} src="" alt="'ready' text" />
       <img ref={secondTextRef} src="" alt="'set' text" />
       <img ref={thirdTextRef} src="" alt="'go!' text" />
@@ -65,8 +65,8 @@ const TextCount = ({ onComplete }) => {
   );
 };
 
-TextCount.propTypes = {
+Countdown.propTypes = {
   onComplete: PropTypes.func.isRequired,
 };
 
-export default TextCount;
+export default Countdown;

@@ -23,19 +23,21 @@ export function throwTween(target) {
       },
       "<"
     )
-    .to(target.position, {
-      z: "+=0.01",
-      duration: 0.5,
-      ease: "sine.in",
-      yoyo: true,
-      repeat: 1,
-    }, ">")
-    .to(
+    .fromTo(
       target.rotation,
-      { x: "+=0.01", duration: 0.5, ease: "sine.in", yoyo: true, repeat: 1 },
-      "<"
+      {
+        x: Math.PI / 8,
+        y: 0,
+        z: -Math.PI / 12,
+        duration: 2,
+        ease: "sine.out",
+      },
+      {
+        x: Math.PI / 18,
+        duration: 6,
+        ease: "elastic.out",
+      }
     );
-
   return sequence;
 }
 

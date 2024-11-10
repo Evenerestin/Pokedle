@@ -14,16 +14,41 @@ img.title {
   position: absolute;
   right: 5vw;
   top: 10svh;
-  z-index: 5;
+  z-index: 10;
   width: 30vw;
   height: auto;
 }
 
-#countdownOverlay {
+.overlay {
   position: absolute;
+  right: 0;
   top: 0;
-  left: 0;
-  height: 100%;
+  opacity: 0;
+  z-index: 5;
   width: 100%;
+  height: 100%;
+  /* background: #fff9df; */
+  background: white;
+  /* background-image: radial-gradient(
+      at 40% 20%,
+      hsla(51, 81%, 86%, 1) 0px,
+      transparent 50%
+    ),
+    radial-gradient(at 97% 46%, hsla(54, 75%, 74%, 1) 0px, transparent 50%),
+    radial-gradient(at 26% 78%, hsla(60, 66%, 88%, 1) 0px, transparent 50%),
+    radial-gradient(at 0% 0%, hsla(50, 98%, 88%, 1) 0px, transparent 50%); */
+}
+
+.countdownOverlay {
+  position: absolute;
+  top: 150%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 30vh;
+  width: auto;
+  max-width: 50vw;
+  /* height: 100%;
+  width: 100%; */
   z-index: 10;
+  pointer-events: none;
 }

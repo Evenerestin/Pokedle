@@ -1,19 +1,21 @@
 /* eslint-disable react/no-unknown-property */
-import {
-  Environment,
-  OrbitControls,
-  PerspectiveCamera,
-} from "@react-three/drei";
+import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
-import { useState } from "react";
-import * as THREE from "three";
-import Pokeball from "../components/Pokeball";
+import PropTypes from "prop-types";
+// import { useState } from "react";
+// import * as THREE from "three";
+import Pokeball from "./Pokeball";
 
-const Scene = () => {
-  const [showCanvas, setShowCanvas] = useState(true);
+const Scene = ({ toggleOverlay, countdown, showCanvas }) => {
+  // const [showCanvas, setShowCanvas] = useState(true);
+  // const handleAnimationStart = () => {
+  //   countdown();
+  // };
+
   const handleAnimationComplete = () => {
-    setShowCanvas(false);
+    toggleOverlay();
+    // setShowCanvas(false);
   };
 
   if (!showCanvas) return null;
@@ -25,7 +27,8 @@ const Scene = () => {
         left: 0,
         width: "100%",
         height: "100%",
-        background: "rgb(20,20,20)",
+        background: "#092C50",
+        // background: "rgb(20,20,20)",
       }}
     >
       <PerspectiveCamera position={[0, 0, 7]} makeDefault />
@@ -34,7 +37,6 @@ const Scene = () => {
       <ambientLight intensity={0.15} color={"blue"} />
       <rectAreaLight
         position={[-1.35, 3, -0.3]}
-        // position={[-1.35, 1.07,-0.4]}
         rotation={[17, -38, 19]}
         color="yellow"
         intensity={20}
@@ -58,12 +60,6 @@ const Scene = () => {
         intensity={100}
         castShadow
       />
-      {/* <pointLight
-      position={[-4, -3, 5]}
-      color="violet"
-      intensity={60}
-      castShadow
-    /> */}
       <rectAreaLight
         position={[4, -5, 7]}
         rotation={[-31, 51, 1]}
@@ -78,21 +74,24 @@ const Scene = () => {
         position={[-2.35, 3, 2]}
         rotation={[17, -38, 19]}
       />
-      {/* <directionalLight position={[1, 1, 1]} intensity={1} color={"blue"} /> */}
-      <Pokeball onAnimationComplete={handleAnimationComplete} />
 
-      <Environment background>
-        <mesh castShadow receiveShadow>
-          <sphereGeometry args={[50, 100, 100]} />
-          <meshBasicMaterial side={THREE.BackSide} color={"#092C50"} />
-        </mesh>
-      </Environment>
+      <Pokeball
+        onAnimationComplete={handleAnimationComplete}
+        // onAnimationStart={handleAnimationStart}
+        countdown={countdown}
+      />
 
       <EffectComposer>
         <Bloom intensity={0.2} />
       </EffectComposer>
     </Canvas>
   );
+};
+
+Scene.propTypes = {
+  toggleOverlay: PropTypes.func.isRequired,
+  countdown: PropTypes.func.isRequired,
+  showCanvas: PropTypes.bool.isRequired,
 };
 
 export default Scene;

@@ -39,6 +39,7 @@ const Home = () => {
   useGSAP(() => {
     if (!showCanvas) {
       const titleElement = document.querySelector("#title");
+      gsap.set(titleElement, { transform: "translate(-50%, 0)" });
       gsap.from(titleElement, {
         rotate: -720,
         duration: 1,

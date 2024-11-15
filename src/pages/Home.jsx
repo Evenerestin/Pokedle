@@ -54,6 +54,9 @@ const Home = () => {
         opacity: 0,
         duration: 0.5,
         ease: "sine.out",
+        onComplete: () => {
+          gsap.set(titleElement, { clearProps: "transform" });
+        },
         // onComplete: () => {
         //   gsap.delayedCall(0.5, () => {
         //     titleElement.classList.add("animateHover");

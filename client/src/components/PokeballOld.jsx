@@ -1,43 +1,156 @@
 /* eslint-disable react/no-unknown-property */
 import { useGSAP } from "@gsap/react";
 import { useGLTF } from "@react-three/drei";
+import { useThree } from "@react-three/fiber";
+import gsap from "gsap";
 import PropTypes from "prop-types";
 import { useRef, useState } from "react";
 import * as THREE from "three";
-import { createPokeballTimeline } from "../assets/pokeballTween";
+import { idleTween } from "../assets/idleTween.js";
+import { lightTween } from "../assets/lightTween.js";
+import { throwTween } from "../assets/throwTween.js";
 
-const Pokeball = ({ countdown, handleCursorIn, handleCursorOut }) => {
+const Pokeball = ({ onAnimationComplete }) => {
   const [isOpen, setIsOpen] = useState(false);
+
   const topHalfRef = useRef();
-  const lightHoopRef = useRef();
   const bottomHalfRef = useRef();
   const buttonRef = useRef();
   const pokeballRef = useRef();
   const innerSphereRef = useRef();
 
+  const { scene } = useThree();
+  const q = (name) => scene.getObjectByName(name);
+
   const { nodes, materials } = useGLTF("/pokeball4.glb");
 
-  useGSAP(
-    () =>
-      createPokeballTimeline(
-        pokeballRef,
-        topHalfRef,
-        bottomHalfRef,
-        lightHoopRef,
-        buttonRef,
-        innerSphereRef,
-        isOpen,
-        countdown
-      ),
-    [isOpen]
-  );
+  const textureLoader = new THREE.TextureLoader();
+  const texture = textureLoader.load("innerBackground.jpg");
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+  texture.center.set(0.5, 0.5);
+
+  const handleButtonClick = () => {
+    setIsOpen(true);
+  };
+
+  useGSAP(() => {
+    const timeline = gsap.timeline({
+      defaults: { duration: 2, ease: "power2.out" },
+    });
+
+    timeline.add(lightTween(q("lightHoop")));
+
+    if (isOpen) {
+      // timeline.kill(idleTween);
+      // timeline.kill();
+      gsap.to(buttonRef.current.position, {
+        z: 2.65,
+        duration: 0.4,
+        ease: "expo.in",
+      });
+
+      gsap.to(pokeballRef.current.position, {
+        x: 0,
+        y: 0,
+        z: 0,
+        duration: 2,
+        ease: "back.inOut",
+      });
+      gsap.to(
+        pokeballRef.current.rotation,
+        {
+          x: 0,
+          y: 0,
+          z: 0,
+          duration: 1.5,
+          ease: "back.inOut",
+        },
+        "<"
+      );
+      gsap.to(pokeballRef.current.scale, {
+        x: "-=0.3",
+        y: "-=0.3",
+        z: "-=0.3",
+        duration: 1.5,
+        ease: "bounce.out",
+      });
+      gsap.to(
+        topHalfRef.current.position,
+        {
+          y: "+=0.4",
+          // z: "-=0.1",
+          duration: 3,
+        },
+        "<"
+      );
+      gsap.to(
+        bottomHalfRef.current.position,
+        {
+          y: "-=0.4",
+          z: "-=0.1",
+          duration: 3,
+        },
+        "<"
+      );
+      gsap.to(
+        topHalfRef.current.rotation,
+        {
+          x: "-=0.4",
+          duration: 3,
+        },
+        "<"
+      );
+      gsap.to(
+        bottomHalfRef.current.rotation,
+        {
+          x: "+=0.4",
+          duration: 3,
+        },
+        "<"
+      );
+      gsap.to(
+        innerSphereRef.current.scale,
+        {
+          x: 5,
+          y: 5,
+          z: 5,
+          duration: 3,
+          ease: "expo.in",
+        },
+        "<"
+      );
+      gsap.to(innerSphereRef.current.position, {
+        z: 7,
+        duration: 2,
+        delay: 2,
+      });
+      gsap.to(innerSphereRef.current.material, {
+        opacity: 0,
+        duration: 2,
+        delay: 2,
+        onComplete: onAnimationComplete,
+      });
+      // gsap.to(pokeballRef.current.rotation, {
+      //   x: 0,
+      //   y: 0,
+      //   z: 0,
+      //   duration: 3,
+      // });
+      return;
+    } else {
+      timeline.add(throwTween(pokeballRef.current));
+      timeline.add(idleTween(pokeballRef.current).repeat(-1));
+    }
+  }, [isOpen]);
 
   return (
     <group
       ref={pokeballRef}
+      // rotation={[Math.PI / 18, 0, -Math.PI / 12]}
       position={[0, 0, 0]}
       rotation={[Math.PI / 8, 0, -Math.PI / 12]}
-      scale={2.2}
+      // rotation={[0, 0, -Math.PI / 12]}
+      scale={2}
       castShadow
       receiveShadow
     >
@@ -60,7 +173,7 @@ const Pokeball = ({ countdown, handleCursorIn, handleCursorOut }) => {
             scale={0.32}
           />
           <mesh
-            ref={lightHoopRef}
+            name="lightHoop"
             castShadow
             receiveShadow
             geometry={nodes.Cylinder002.geometry}
@@ -85,18 +198,9 @@ const Pokeball = ({ countdown, handleCursorIn, handleCursorOut }) => {
             // position={[0, 0, 2.65]}
             rotation={[Math.PI / 2, 0, 0]}
             scale={1.25}
-            // onClick={handleButtonClick}
-            onClick={() => {
-              setIsOpen(true);
-            }}
-            onPointerOver={() => {
-              document.body.style.cursor = "pointer";
-              handleCursorIn();
-            }}
-            onPointerOut={() => {
-              document.body.style.cursor = "default";
-              isOpen ? "" : handleCursorOut();
-            }}
+            onClick={handleButtonClick}
+            onPointerOver={() => (document.body.style.cursor = "pointer")}
+            onPointerOut={() => (document.body.style.cursor = "default")}
           />
           <mesh
             castShadow
@@ -129,6 +233,7 @@ const Pokeball = ({ countdown, handleCursorIn, handleCursorOut }) => {
           receiveShadow
           geometry={nodes.Sphere001.geometry}
           material={materials.Black}
+          // position={[0, 0.009, 0]}
           position={[0, 0.009, 0.01]}
           scale={0.918}
         />
@@ -136,7 +241,6 @@ const Pokeball = ({ countdown, handleCursorIn, handleCursorOut }) => {
       <mesh ref={innerSphereRef} scale={[0, 0, 0]} position={[0, 0, 0]}>
         <sphereGeometry args={[0.85, 32, 32]} />
         <meshStandardMaterial
-          color={"#FFF2BC"}
           emissive={new THREE.Color("yellow")}
           emissiveIntensity={5}
           side={THREE.DoubleSide}
@@ -148,9 +252,7 @@ const Pokeball = ({ countdown, handleCursorIn, handleCursorOut }) => {
 };
 
 Pokeball.propTypes = {
-  countdown: PropTypes.func.isRequired,
-  handleCursorIn: PropTypes.func.isRequired,
-  handleCursorOut: PropTypes.func.isRequired,
+  onAnimationComplete: PropTypes.func.isRequired,
 };
 
 export default Pokeball;

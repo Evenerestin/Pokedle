@@ -5,3 +5,17 @@
   margin: 0;
   padding: 0;
 }
+
+.gridCenter {
+  display: grid;
+  place-content: center;
+}
+
+.flex {
+  display: flex;
+}
+
+.flexColumn {
+  display: flex;
+  flex-direction: column;
+}

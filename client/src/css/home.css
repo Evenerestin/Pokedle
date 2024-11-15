@@ -1,54 +1,115 @@
-#home {
-  height: 100svh;
-  background: rgb(244, 19, 47);
+html {
   overflow: hidden;
+}
+#home {
+  width: 100%;
+  background: rgb(244, 19, 47);
+  height: 100svh;
 }
 
 video {
-  height: 100%;
-  width: 100%;
+  height: 100svh;
+  width: 100vw;
   object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 
-img.title {
+.mainContainer {
+  padding: 0 7vw;
+  height: 100%;
+  width: 100%;
+  position: relative;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 2vw;
+}
+
+.formContainer {
+  max-width: 50vw;
+  width: 50vw;
+  height: 80%;
+  fill: 1;
+  position: relative;
+  padding-top: 25vh;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.formContainer form {
+  height: 100%;
+  width: auto;
+}
+
+.formContainer form input {
+  width: clamp(5rem, 30vw, 30rem);
+  font-size: 2rem;
+}
+
+#title {
   position: absolute;
-  right: 5vw;
-  top: 10svh;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, 0);
   z-index: 10;
-  width: 30vw;
+  /* width: 100%; */
+  width: auto;
+  height: 20vh;
+  max-height: 40vh;
+  object-fit: contain;
+}
+
+/* #title.animateHover {
+  transition: all 0.3s ease;
+}
+
+#title.animateHover:hover {
+  height: 22vh;
+  width: auto;
+  transform: translate(-50%, -2vh);
+  cursor: pointer;
+} */
+
+img.countdownOverlay {
+  position: absolute;
+  /* top: 150%; */
+  bottom: -50%;
+  /* opacity: 0; */
+  left: 50%;
+  transform: translate(-50%, 50%);
+  height: 10%;
+  width: auto;
+  max-width: 50vw;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.imageContainer {
+  width: 40vw;
   height: auto;
 }
 
-.overlay {
-  position: absolute;
-  right: 0;
-  top: 0;
-  opacity: 0;
-  z-index: 5;
+img#pokemonImage {
+  height: 70vh;
   width: 100%;
-  height: 100%;
-  /* background: #fff9df; */
-  background: white;
-  /* background-image: radial-gradient(
-      at 40% 20%,
-      hsla(51, 81%, 86%, 1) 0px,
-      transparent 50%
-    ),
-    radial-gradient(at 97% 46%, hsla(54, 75%, 74%, 1) 0px, transparent 50%),
-    radial-gradient(at 26% 78%, hsla(60, 66%, 88%, 1) 0px, transparent 50%),
-    radial-gradient(at 0% 0%, hsla(50, 98%, 88%, 1) 0px, transparent 50%); */
+  object-fit: contain;
+  /* height: 100%; */
+  /* width: auto; */
+  /* max-width: 50vw; */
+  /* max-width: 40vw; */
+  /* object-fit: contain; */
+  /* position: absolute; */
+  /* top: 50%; */
+  /* left: 10vw; */
+  /* transform: translate(0, -50%); */
+  /* z-index: 5; */
+  filter: brightness(1);
+  transition: filter 2s ease;
 }
 
-.countdownOverlay {
-  position: absolute;
-  top: 150%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  height: 30vh;
-  width: auto;
-  max-width: 50vw;
-  /* height: 100%;
-  width: 100%; */
-  z-index: 10;
-  pointer-events: none;
+#pokemonImage.notGuessed {
+  /* mask-image: black; */
+  filter: brightness(0);
 }

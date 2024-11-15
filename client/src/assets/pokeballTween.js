@@ -13,9 +13,9 @@ export const createPokeballTimeline = (
   buttonRef,
   innerSphereRef,
   isOpen,
-  countdown,
+  countdown
   //   onAnimationStart,
-  onAnimationComplete
+  // onAnimationComplete
 ) => {
   const timeline = gsap.timeline({
     defaults: { duration: 2, ease: "power2.out" },
@@ -126,8 +126,8 @@ export const createPokeballTimeline = (
     gsap.to(innerSphereRef.current.position, {
       z: 5,
       duration: 4,
-      delay: 2,
-      onComplete: onAnimationComplete,
+      delay: 2.5,
+      // onComplete: onAnimationComplete,
     });
     gsap.to(innerSphereRef.current.material, {
       opacity: 0,

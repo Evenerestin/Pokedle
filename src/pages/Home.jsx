@@ -29,9 +29,9 @@ const Home = () => {
         setShowCanvas(false);
       },
     });
-    countdownTimeline.add(textTween("#first", 10), "+=1.5");
-    countdownTimeline.add(textTween("#second", 10));
-    countdownTimeline.add(textTween("#third", 20));
+    countdownTimeline.add(textTween("#first", 20), "+=1.5");
+    countdownTimeline.add(textTween("#second", 20));
+    countdownTimeline.add(textTween("#third", 30));
     setCountdownHasRun(true);
     return countdownTimeline;
   }, [countdownHasRun]);

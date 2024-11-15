@@ -43,13 +43,13 @@ const Home = () => {
         titleElement,
         {
           rotate: -720,
-          translateX: -50,
+          translateX: "-50%",
           duration: 1,
           ease: "power4.out",
         },
         {
           rotate: 0,
-          translateX: -50,
+          translateX: "-50%",
         }
       );
       gsap.from(titleElement, {

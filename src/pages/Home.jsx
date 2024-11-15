@@ -39,12 +39,19 @@ const Home = () => {
   useGSAP(() => {
     if (!showCanvas) {
       const titleElement = document.querySelector("#title");
-      gsap.from(titleElement, {
-        rotate: -720,
-        translateX: "-50%",
-        duration: 1,
-        ease: "power4.out",
-      });
+      gsap.fromTo(
+        titleElement,
+        {
+          rotate: -720,
+          translateX: -50,
+          duration: 1,
+          ease: "power4.out",
+        },
+        {
+          rotate: 0,
+          translateX: -50,
+        }
+      );
       gsap.from(titleElement, {
         height: "5vh",
         duration: 0.8,

@@ -39,9 +39,9 @@ const Home = () => {
   useGSAP(() => {
     if (!showCanvas) {
       const titleElement = document.querySelector("#title");
-      gsap.set(titleElement, { transform: "translate(-50%, 0)" });
       gsap.from(titleElement, {
         rotate: -720,
+        translateX: "-50%",
         duration: 1,
         ease: "power4.out",
       });
@@ -54,9 +54,6 @@ const Home = () => {
         opacity: 0,
         duration: 0.5,
         ease: "sine.out",
-        onComplete: () => {
-          gsap.set(titleElement, { clearProps: "transform" });
-        },
         // onComplete: () => {
         //   gsap.delayedCall(0.5, () => {
         //     titleElement.classList.add("animateHover");

@@ -7,6 +7,12 @@ html {
   height: 100svh;
 }
 
+img {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
 video {
   height: 100svh;
   width: 100vw;
@@ -59,6 +65,7 @@ video {
   height: 20vh;
   max-height: 40vh;
   object-fit: contain;
+  pointer-events: none;
 }
 
 /* #title.animateHover {

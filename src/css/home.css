@@ -54,11 +54,11 @@ video {
   font-size: 2rem;
 }
 
-img#title {
+#home img#title {
   position: absolute;
   top: 0;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, 0);
   z-index: 10;
   /* width: 100%; */
   width: auto;

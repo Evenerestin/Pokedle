@@ -29,9 +29,9 @@ const Home = () => {
         setShowCanvas(false);
       },
     });
-    countdownTimeline.add(textTween("#first", 20), "+=1.5");
-    countdownTimeline.add(textTween("#second", 20));
-    countdownTimeline.add(textTween("#third", 30));
+    countdownTimeline.add(textTween("#first", 10), "+=1.5");
+    countdownTimeline.add(textTween("#second", 10));
+    countdownTimeline.add(textTween("#third", 20));
     setCountdownHasRun(true);
     return countdownTimeline;
   }, [countdownHasRun]);
@@ -45,7 +45,7 @@ const Home = () => {
         ease: "power4.out",
       });
       gsap.from(titleElement, {
-        width: "10vh",
+        height: "5vh",
         duration: 0.8,
         ease: "back.out",
       });

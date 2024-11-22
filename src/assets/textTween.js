@@ -6,7 +6,7 @@ export function textTween(target, heighValue) {
     .to(target, {
       bottom: "50%",
       height: `${heighValue}%`,
-      duration: 0.5,
+      duration: 1,
       yoyoEase: "back.in",
       repeat: 1,
     })
@@ -14,7 +14,7 @@ export function textTween(target, heighValue) {
       target,
       {
         opacity: 1,
-        duration: 0.5,
+        duration: 1,
         ease: "power4.out",
         yoyoEase: "power4.in",
         repeat: 1,

@@ -61,7 +61,6 @@ video {
   transform: translate(-50%, 0);
   transition: transform 0.3s ease; 
   z-index: 10;
-  /* width: 100%; */
   width: auto;
   height: 20vh;
   max-height: 40vh;
@@ -69,22 +68,9 @@ video {
   pointer-events: none;
 }
 
-/* #title.animateHover {
-  transition: all 0.3s ease;
-}
-
-#title.animateHover:hover {
-  height: 22vh;
-  width: auto;
-  transform: translate(-50%, -2vh);
-  cursor: pointer;
-} */
-
 img.countdownOverlay {
   position: absolute;
-  /* top: 150%; */
   bottom: -50%;
-  /* opacity: 0; */
   left: 50%;
   transform: translate(-50%, 50%);
   height: 10%;
@@ -103,21 +89,10 @@ img#pokemonImage {
   height: 70vh;
   width: 100%;
   object-fit: contain;
-  /* height: 100%; */
-  /* width: auto; */
-  /* max-width: 50vw; */
-  /* max-width: 40vw; */
-  /* object-fit: contain; */
-  /* position: absolute; */
-  /* top: 50%; */
-  /* left: 10vw; */
-  /* transform: translate(0, -50%); */
-  /* z-index: 5; */
   filter: brightness(1);
   transition: filter 2s ease;
 }
 
 #pokemonImage.notGuessed {
-  /* mask-image: black; */
   filter: brightness(0);
 }

@@ -29,7 +29,7 @@ const Form = ({ onGuess }) => {
       <input
         type="text"
         name="guessInput"
-        placeholder="Guess the Pokémon Name"
+        placeholder="Guess the Pokémon"
         value={guess}
         onChange={handleInputChange}
         required

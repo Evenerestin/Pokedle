@@ -34,8 +34,7 @@ video {
 }
 
 .formContainer {
-  max-width: 50vw;
-  width: 50vw;
+  width: 70vw;
   height: 80%;
   fill: 1;
   position: relative;
@@ -46,12 +45,23 @@ video {
 
 .formContainer form {
   height: 100%;
-  width: auto;
+  width: 80%;
 }
 
 .formContainer form input {
-  width: clamp(5rem, 30vw, 30rem);
-  font-size: 2rem;
+  /* width: clamp(5rem, 30vw, 30rem); */
+  width: 100%;
+  font-size: 1.2rem;
+  padding: 0.5rem 2rem;
+  border-radius: 0.5rem;
+  border: none;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+  outline: none;
+}
+
+.formContainer form input::placeholder {
+  color: rgb(184, 184, 184);
+  letter-spacing: 1px;
 }
 
 #title {
@@ -59,7 +69,7 @@ video {
   top: 0;
   left: 50%;
   transform: translate(-50%, 0);
-  transition: transform 0.3s ease; 
+  transition: transform 0.3s ease;
   z-index: 10;
   width: auto;
   height: 20vh;

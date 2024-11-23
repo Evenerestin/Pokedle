@@ -24,15 +24,16 @@ export const usePokemon = () => {
       do {
         currentId = getRandomPokemonId();
       } while (currentId === lastUsedId);
+
+      setLastUsedId(currentId);
+
       const fetchedPokemon = await fetchPokemonById(currentId);
       setPokemon(fetchedPokemon);
-      setLastUsedId(currentId);
     } catch (error) {
       console.error("Error fetching Pokémon:", error);
     } finally {
       setLoading(false);
     }
   }, [lastUsedId]);
-
   return { pokemon, loading, fetchRandomPokemon };
 };

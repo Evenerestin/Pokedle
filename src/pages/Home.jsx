@@ -1,76 +1,78 @@
 import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { useCallback, useEffect, useState } from "react";
-import { textTween } from "../assets/textTween";
+// import gsap from "gsap";
+import { useEffect, useState } from "react";
 import Form from "../components/Form";
 import Scene from "../components/Scene";
 import "../css/home.css";
+import { useCountdown } from "../hooks/useCountdown";
 import { usePokemon } from "../hooks/usePokemon";
+// import { textTween } from "../tweens/textTween";
+import { titleTween } from "../tweens/titleTween";
 
 const Home = () => {
   const { pokemon, loading, fetchRandomPokemon } = usePokemon();
-  const [countdownHasRun, setCountdownHasRun] = useState(false);
-  const [showCanvas, setShowCanvas] = useState(true);
+  // const [countdownHasRun, setCountdownHasRun ] = useState(false);
+  // const [showCanvas, setShowCanvas] = useState(true);
   // const [fadeCompleted, setFadeCompleted] = useState(false);
   const [guessed, setGuessed] = useState(false);
+  const { countdown, showCanvas, setShowCanvas } = useCountdown(() =>
+    setShowCanvas(false)
+  );
 
   useEffect(() => {
     fetchRandomPokemon();
   }, []);
 
-  const onGuess = useCallback((guessId) => {
-    if (guessId && guessId === pokemon.id) setGuessed(true);
-  });
+  const onGuess = () => {
+    setGuessed(true);
+  };
 
-  const countdown = useCallback(() => {
-    if (countdownHasRun) return;
-    const countdownTimeline = gsap.timeline({
-      onComplete: () => {
-        setShowCanvas(false);
-      },
-    });
-    countdownTimeline.add(textTween("#first", 20), "+=1.5");
-    countdownTimeline.add(textTween("#second", 20));
-    countdownTimeline.add(textTween("#third", 30));
-    setCountdownHasRun(true);
-    return countdownTimeline;
-  }, [countdownHasRun]);
+  // const countdown = useCallback(() => {
+  //   if (countdownHasRun) return;
+  //   const countdownTimeline = gsap.timeline({
+  //     onComplete: () => {
+  //       setShowCanvas(false);
+  //     },
+  //   });
+  //   countdownTimeline.add(textTween("#first", 20), "+=1.5");
+  //   countdownTimeline.add(textTween("#second", 20));
+  //   countdownTimeline.add(textTween("#third", 30));
+  //   setCountdownHasRun(true);
+  //   return countdownTimeline;
+  // }, [countdownHasRun]);
 
   useGSAP(() => {
     if (!showCanvas) {
-      const titleElement = document.querySelector("#title");
-      gsap.fromTo(
-        titleElement,
-        {
-          rotate: -720,
-          translateX: "-50%",
-          duration: 1,
-          ease: "power4.out",
-        },
-        {
-          translateX: "-50%",
-        }
-      );
-      gsap.from(titleElement, {
-        height: "5vh",
-        duration: 0.8,
-        ease: "back.out",
-      });
-      gsap.from(titleElement, {
-        opacity: 0,
-        duration: 0.5,
-        ease: "sine.out",
-        // onComplete: () => {
-        //   gsap.delayedCall(0.5, () => {
-        //     titleElement.classList.add("animateHover");
-        //   });
-        // },
-        // onComplete: () => {
-        //   titleElement.classList.add("animateHover");
-        // },
-      });
+      titleTween(); // Call the title animation utility
     }
   }, [showCanvas]);
+  // useGSAP(() => {
+  //   if (!showCanvas) {
+  //     const titleElement = document.querySelector("#title");
+  //     gsap.fromTo(
+  //       titleElement,
+  //       {
+  //         rotate: -720,
+  //         translateX: "-50%",
+  //         duration: 1,
+  //         ease: "power4.out",
+  //       },
+  //       {
+  //         translateX: "-50%",
+  //       }
+  //     );
+  //     gsap.from(titleElement, {
+  //       height: "5vh",
+  //       duration: 0.8,
+  //       ease: "back.out",
+  //     });
+  //     gsap.from(titleElement, {
+  //       opacity: 0,
+  //       duration: 0.5,
+  //       ease: "sine.out",
+  //     });
+  //   }
+  // }, [showCanvas]);
 
   return (
     <div id="home">
@@ -80,14 +82,16 @@ const Home = () => {
       {!showCanvas && (
         <div className="mainContainer flex">
           <div className="imageContainer gridCenter">
-            <img
-              id="pokemonImage"
-              className={guessed ? "" : "notGuessed"}
-              // src={pokemonImage}
-              // src={pokemon.sprites.front_default}
-              src={pokemon.sprites.other.dream_world.front_default}
-              alt="Pokemon image"
-            />
+            {pokemon && pokemon.sprites?.other?.dream_world?.front_default ? (
+              <img
+                id="pokemonImage"
+                className={guessed ? "" : "notGuessed"}
+                src={pokemon.sprites.other.dream_world.front_default}
+                alt="Pokemon image"
+              />
+            ) : (
+              <p>Loading Pokémon...</p> // Optional placeholder while loading
+            )}
           </div>
           <div className="formContainer flexColumn">
             <img id="title" src="/title.png" alt="Pokedle" />

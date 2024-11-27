@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 const BASE_URL = "https://pokeapi.co/api/v2/pokemon";
 
@@ -17,7 +17,7 @@ export const usePokemon = () => {
 
   const getRandomPokemonId = () => Math.floor(Math.random() * 151) + 1;
 
-  const fetchRandomPokemon = useCallback(async () => {
+  const fetchRandomPokemon = async () => {
     setLoading(true);
     try {
       let currentId;
@@ -34,6 +34,6 @@ export const usePokemon = () => {
     } finally {
       setLoading(false);
     }
-  }, [lastUsedId]);
+  };
   return { pokemon, loading, fetchRandomPokemon };
 };
